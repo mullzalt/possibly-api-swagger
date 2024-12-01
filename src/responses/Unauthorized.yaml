@@ -1,6 +1,14 @@
-description: successful response
+description: Unauthorized
 content:
   application/json:
     schema:
       allOf:
         - $ref: "../schemas/Response.yaml"
+        - type: object
+          properties:
+            message:
+              default: "Unauthorized"
+            code:
+              default: 401
+            success:
+              default: false

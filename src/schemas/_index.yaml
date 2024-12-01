@@ -1,6 +1,12 @@
+AdminAccount:
+  $ref: "./AdminAccount.yaml"
+BearerTokens:
+  $ref: "./BearerTokens.yaml"
+PersonalAccount:
+  $ref: "./PersonalAccount.yaml"
 Response:
   $ref: "./Response.yaml"
 SignIn:
   $ref: "./SignIn.yaml"
-BearerTokens:
-  $ref: "./BearerTokens.yaml"
+User:
+  $ref: "./User.yaml"

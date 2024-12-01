@@ -5,5 +5,8 @@ required:
 properties:
   emailOrPhoneNumber:
     type: string
+    example: myemail@email.com
   password:
     type: string
+    minLength: 6
+    example: p4ssw0rd

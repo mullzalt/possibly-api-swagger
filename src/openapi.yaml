@@ -7,14 +7,59 @@ info:
 tags:
   - name: Authentication
     description: Authentication actions
+  - name: Payment
+    description: Payment methods and type
+  - name: Transaction
+    description: Transaction actions
+  - name: Profile
+    description: Manage personal information
+  - name: Company Resource
+    description: Manage company or shop resources information
+  - name: User
+    description: Manage users
 
 paths:
-  /auth/sign-up:
+  /admin/users:
+    $ref: "./resources/auth-sign-up-admin.yaml"
+  /auth/sign-up/personal:
+    $ref: "./resources/auth-sign-up-personal.yaml"
+  /auth/sign-up/business:
     $ref: "./resources/auth-sign-in.yaml"
   /auth/sign-in:
     $ref: "./resources/auth-sign-in.yaml"
   /auth/sign-out:
     $ref: "./resources/auth-sign-out.yaml"
+  /password/reset:
+    $ref: "./resources/auth-sign-out.yaml"
+  /password/reset/{token}:
+    $ref: "./resources/auth-sign-out.yaml"
+  /employees:
+    $ref: "./resources/auth-sign-out.yaml"
+  /categories:
+    $ref: "./resources/auth-sign-out.yaml"
+  /categories/{categoryId}:
+    $ref: "./resources/auth-sign-out.yaml"
+  /taxes:
+    $ref: "./resources/auth-sign-out.yaml"
+  /discounts:
+    $ref: "./resources/auth-sign-out.yaml"
+  /orders:
+    $ref: "./resources/auth-sign-out.yaml"
+  /orders/{orderId}:
+    $ref: "./resources/auth-sign-out.yaml"
+  /payments:
+    $ref: "./resources/auth-sign-out.yaml"
+  /payment-keys:
+    $ref: "./resources/auth-sign-out.yaml"
+  /features:
+    $ref: "./resources/auth-sign-out.yaml"
+  /features/{featureId}:
+    $ref: "./resources/auth-sign-out.yaml"
+  /subcriptions:
+    $ref: "./resources/auth-sign-out.yaml"
+  /subcriptions/{subcriptionId}:
+    $ref: "./resources/auth-sign-out.yaml"
+
 components:
   schemas:
     $ref: "./schemas/_index.yaml"

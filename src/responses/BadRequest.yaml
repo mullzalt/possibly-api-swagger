@@ -1,4 +1,4 @@
-description: Forbidden content
+description: Bad request, invalid input
 content:
   application/json:
     schema:
@@ -7,8 +7,12 @@ content:
         - type: object
           properties:
             message:
-              default: "Access Forbidden"
+              default: "Bad Request"
             code:
-              default: 403
+              default: 400
             success:
               default: false
+            issues:
+              type: array
+              item:
+                type: any

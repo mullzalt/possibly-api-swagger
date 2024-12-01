@@ -1,0 +1,49 @@
+type: object
+required:
+  - email
+  - password
+properties:
+  id:
+    type: string
+    readOnly: true
+  email:
+    type: string
+    example: "some@email.com"
+  password:
+    type: string
+    writeOnly: true
+    descrpition: Hashed password
+  accountType:
+    type: string
+    readOnly: true
+    enum: [personal, employee, business, partner, admin]
+    default: personal
+  referralCode:
+    type: string
+    readOnly: true
+    nullable: true
+    default: null
+  referredBy:
+    type: string
+    readOnly: true
+    nullable: true
+    default: null
+  deletedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
+  createdAt:
+    type: string
+    readOnly: true
+    format: date-time
+    example: 2024-12-01T15:30:00Z
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z

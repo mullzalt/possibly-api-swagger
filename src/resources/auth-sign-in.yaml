@@ -1,7 +1,14 @@
 post:
   summary: Sign in authentication action
   tags:
-    - auth
+    - Authentication
+  requestBody:
+    description: Credential used for sign in
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/SignIn.yaml"
   responses:
     "200":
       description: Successfull sign in

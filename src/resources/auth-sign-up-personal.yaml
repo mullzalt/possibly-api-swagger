@@ -1,0 +1,34 @@
+post:
+  summary: Sign up for personal account user then sign in
+  tags:
+    - Authentication
+  requestBody:
+    description: Credential and account information for new personal account
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user:
+              $ref: "../schemas/SignIn.yaml"
+            account:
+              $ref: "../schemas/PersonalAccount.yaml"
+  responses:
+    "200":
+      description: Account successfully created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "Account created"
+                  data:
+                    $ref: "../schemas/BearerTokens.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

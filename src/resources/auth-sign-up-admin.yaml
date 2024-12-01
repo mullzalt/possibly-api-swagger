@@ -1,0 +1,38 @@
+post:
+  summary: Create new account for admin, admin protected
+  tags:
+    - User
+  security:
+    - bearerAuth: []
+  requestBody:
+    description: Credential and account information for new admin
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user:
+              $ref: "../schemas/SignIn.yaml"
+            account:
+              $ref: "../schemas/AdminAccount.yaml"
+  responses:
+    "200":
+      description: Account successfully created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "Account created"
+    "401":
+      description: Not signed in
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      description: Not admin
+      $ref: "../responses/Forbidden.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

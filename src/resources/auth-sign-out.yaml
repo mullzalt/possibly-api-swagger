@@ -1,7 +1,7 @@
 post:
   summary: Sign out from existing session
   tags:
-    - auth
+    - Authentication
   security:
     - bearerAuth: []
   responses:

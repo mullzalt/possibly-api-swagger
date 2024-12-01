@@ -5,12 +5,103 @@ info:
 tags:
   - name: Authentication
     description: Authentication actions
+  - name: Payment
+    description: Payment methods and type
+  - name: Transaction
+    description: Transaction actions
+  - name: Profile
+    description: Manage personal information
+  - name: Company Resource
+    description: Manage company or shop resources information
+  - name: User
+    description: Manage users
 paths:
-  /auth/sign-up:
+  /admin/users:
+    post:
+      summary: Create new account for admin, admin protected
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Credential and account information for new admin
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/SignIn'
+                account:
+                  $ref: '#/components/schemas/AdminAccount'
+      responses:
+        '200':
+          description: Account successfully created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Account created
+        '401':
+          description: Not signed in
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Not admin
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /auth/sign-up/personal:
+    post:
+      summary: Sign up for personal account user then sign in
+      tags:
+        - Authentication
+      requestBody:
+        description: Credential and account information for new personal account
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/SignIn'
+                account:
+                  $ref: '#/components/schemas/PersonalAccount'
+      responses:
+        '200':
+          description: Account successfully created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Account created
+                      data:
+                        $ref: '#/components/schemas/BearerTokens'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /auth/sign-up/business:
     post:
       summary: Sign in authentication action
       tags:
-        - auth
+        - Authentication
+      requestBody:
+        description: Credential used for sign in
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
       responses:
         '200':
           description: Successfull sign in
@@ -46,7 +137,14 @@ paths:
     post:
       summary: Sign in authentication action
       tags:
-        - auth
+        - Authentication
+      requestBody:
+        description: Credential used for sign in
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
       responses:
         '200':
           description: Successfull sign in
@@ -82,7 +180,547 @@ paths:
     post:
       summary: Sign out from existing session
       tags:
-        - auth
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /password/reset:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /password/reset/{token}:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /employees:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /categories:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /categories/{categoryId}:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /taxes:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /discounts:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /orders:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /orders/{orderId}:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /payments:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /payment-keys:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /features:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /features/{featureId}:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /subcriptions:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /subcriptions/{subcriptionId}:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - Authentication
       security:
         - bearerAuth: []
       responses:
@@ -116,6 +754,63 @@ paths:
           $ref: '#/components/responses/Unexpected'
 components:
   schemas:
+    SignIn:
+      type: object
+      required:
+        - emailOrPhoneNumber
+        - password
+      properties:
+        emailOrPhoneNumber:
+          type: string
+          example: myemail@email.com
+        password:
+          type: string
+          minLength: 6
+          example: p4ssw0rd
+    AdminAccount:
+      type: object
+      required:
+        - fullName
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        fullName:
+          type: string
+          example: John Doe
+        role:
+          type: string
+          readOnly: true
+          enum:
+            - super_admin
+            - admin
+          default: admin
+        userId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
     Response:
       type: object
       properties:
@@ -129,6 +824,56 @@ components:
         success:
           type: boolean
           default: true
+    PersonalAccount:
+      type: object
+      required:
+        - fullName
+        - dateOfBirth
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        fullName:
+          type: string
+          example: John Doe
+        address:
+          type: string
+          nullable: true
+        imagePath:
+          type: string
+          nullable: true
+        bankAccountNumber:
+          type: string
+          nullable: true
+        bankName:
+          type: string
+          nullable: true
+        userId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
     BearerTokens:
       type: object
       properties:
@@ -138,16 +883,61 @@ components:
         refreshToken:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-    SignIn:
+    User:
       type: object
       required:
-        - emailOrPhoneNumber
+        - email
         - password
       properties:
-        emailOrPhoneNumber:
+        id:
           type: string
+          readOnly: true
+        email:
+          type: string
+          example: some@email.com
         password:
           type: string
+          writeOnly: true
+          descrpition: Hashed password
+        accountType:
+          type: string
+          readOnly: true
+          enum:
+            - personal
+            - employee
+            - business
+            - partner
+            - admin
+          default: personal
+        referralCode:
+          type: string
+          readOnly: true
+          nullable: true
+          default: null
+        referredBy:
+          type: string
+          readOnly: true
+          nullable: true
+          default: null
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
   responses:
     Unexpected:
       description: unexpected error
@@ -164,19 +954,55 @@ components:
                     default: 500
                   success:
                     default: false
-    Forbidden:
-      description: unexpected error
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Response'
-            properties:
-              success:
-                default: false
-              code:
-                const: 403
-              message:
-                default: Access forbidden
+            allOf:
+              - $ref: '#/components/schemas/Response'
+              - type: object
+                properties:
+                  message:
+                    default: Unauthorized
+                  code:
+                    default: 401
+                  success:
+                    default: false
+    Forbidden:
+      description: Forbidden content
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+              - type: object
+                properties:
+                  message:
+                    default: Access Forbidden
+                  code:
+                    default: 403
+                  success:
+                    default: false
+    BadRequest:
+      description: Bad request, invalid input
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+              - type: object
+                properties:
+                  message:
+                    default: Bad Request
+                  code:
+                    default: 400
+                  success:
+                    default: false
+                  issues:
+                    type: array
+                    item:
+                      type: any
     NotFound:
       description: successful response
       content:
@@ -185,13 +1011,6 @@ components:
             allOf:
               - $ref: '#/components/schemas/Response'
     Ok:
-      description: successful response
-      content:
-        application/json:
-          schema:
-            allOf:
-              - $ref: '#/components/schemas/Response'
-    Unauthorized:
       description: successful response
       content:
         application/json:
