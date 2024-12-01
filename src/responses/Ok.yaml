@@ -1,0 +1,6 @@
+description: successful response
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: "../schemas/Response.yaml"

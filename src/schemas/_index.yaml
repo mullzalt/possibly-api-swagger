@@ -1,0 +1,6 @@
+Response:
+  $ref: "./Response.yaml"
+SignIn:
+  $ref: "./SignIn.yaml"
+BearerTokens:
+  $ref: "./BearerTokens.yaml"

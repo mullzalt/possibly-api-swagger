@@ -1,0 +1,14 @@
+description: unexpected error
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: "../schemas/Response.yaml"
+        - type: object
+          properties:
+            message:
+              default: "Internal server error"
+            code:
+              default: 500
+            success:
+              default: false

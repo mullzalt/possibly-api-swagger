@@ -1,0 +1,35 @@
+post:
+  summary: Sign out from existing session
+  tags:
+    - auth
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Successfull sign out
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "Sign out successfull"
+    "401":
+      description: No current session
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "You are not signed in"
+                  code:
+                    default: 401
+                  success:
+                    default: false
+    default:
+      $ref: "../responses/Unexpected.yaml"

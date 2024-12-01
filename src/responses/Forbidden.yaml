@@ -1,0 +1,12 @@
+description: unexpected error
+content:
+  application/json:
+    schema:
+      $ref: "../schemas/Response.yaml"
+      properties:
+        success:
+          default: false
+        code:
+          const: 403
+        message:
+          default: Access forbidden

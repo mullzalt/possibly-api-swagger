@@ -1,0 +1,12 @@
+type: object
+properties:
+  message:
+    type: string
+    default: OK
+  code:
+    type: integer
+    format: int64
+    default: 200
+  success:
+    type: boolean
+    default: true

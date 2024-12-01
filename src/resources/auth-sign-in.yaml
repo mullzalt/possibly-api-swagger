@@ -1,0 +1,35 @@
+post:
+  summary: Sign in authentication action
+  tags:
+    - auth
+  responses:
+    "200":
+      description: Successfull sign in
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "Sign in successfull"
+                  data:
+                    $ref: "../schemas/BearerTokens.yaml"
+    "403":
+      description: Invalid sign in credential
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "Invalid email or password"
+                  code:
+                    default: 403
+                  success:
+                    default: false
+    default:
+      $ref: "../responses/Unexpected.yaml"

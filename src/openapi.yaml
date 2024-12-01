@@ -1,0 +1,24 @@
+openapi: 3.1.0
+
+info:
+  title: Posibly API
+  version: 0.0.1
+
+tags:
+  - name: Authentication
+    description: Authentication actions
+
+paths:
+  /auth/sign-up:
+    $ref: "./resources/auth-sign-in.yaml"
+  /auth/sign-in:
+    $ref: "./resources/auth-sign-in.yaml"
+  /auth/sign-out:
+    $ref: "./resources/auth-sign-out.yaml"
+components:
+  schemas:
+    $ref: "./schemas/_index.yaml"
+  responses:
+    $ref: "./responses/_index.yaml"
+  securitySchemes:
+    $ref: "./securities/_index.yaml"

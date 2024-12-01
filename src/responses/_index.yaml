@@ -1,0 +1,10 @@
+Forbidden:
+  $ref: "./Forbidden.yaml"
+NotFound:
+  $ref: "./NotFound.yaml"
+Ok:
+  $ref: "./Ok.yaml"
+Unauthorized:
+  $ref: "./Unauthorized.yaml"
+Unexpected:
+  $ref: "./Unexpected.yaml"

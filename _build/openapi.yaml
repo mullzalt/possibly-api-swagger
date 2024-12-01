@@ -1,0 +1,205 @@
+openapi: 3.1.0
+info:
+  title: Posibly API
+  version: 0.0.1
+tags:
+  - name: Authentication
+    description: Authentication actions
+paths:
+  /auth/sign-up:
+    post:
+      summary: Sign in authentication action
+      tags:
+        - auth
+      responses:
+        '200':
+          description: Successfull sign in
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign in successfull
+                      data:
+                        $ref: '#/components/schemas/BearerTokens'
+        '403':
+          description: Invalid sign in credential
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Invalid email or password
+                      code:
+                        default: 403
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /auth/sign-in:
+    post:
+      summary: Sign in authentication action
+      tags:
+        - auth
+      responses:
+        '200':
+          description: Successfull sign in
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign in successfull
+                      data:
+                        $ref: '#/components/schemas/BearerTokens'
+        '403':
+          description: Invalid sign in credential
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Invalid email or password
+                      code:
+                        default: 403
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /auth/sign-out:
+    post:
+      summary: Sign out from existing session
+      tags:
+        - auth
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull sign out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: Sign out successfull
+        '401':
+          description: No current session
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      message:
+                        default: You are not signed in
+                      code:
+                        default: 401
+                      success:
+                        default: false
+        default:
+          $ref: '#/components/responses/Unexpected'
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        message:
+          type: string
+          default: OK
+        code:
+          type: integer
+          format: int64
+          default: 200
+        success:
+          type: boolean
+          default: true
+    BearerTokens:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    SignIn:
+      type: object
+      required:
+        - emailOrPhoneNumber
+        - password
+      properties:
+        emailOrPhoneNumber:
+          type: string
+        password:
+          type: string
+  responses:
+    Unexpected:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+              - type: object
+                properties:
+                  message:
+                    default: Internal server error
+                  code:
+                    default: 500
+                  success:
+                    default: false
+    Forbidden:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+            properties:
+              success:
+                default: false
+              code:
+                const: 403
+              message:
+                default: Access forbidden
+    NotFound:
+      description: successful response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+    Ok:
+      description: successful response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+    Unauthorized:
+      description: successful response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

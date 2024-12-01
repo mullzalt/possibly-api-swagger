@@ -1,0 +1,9 @@
+type: object
+required:
+  - emailOrPhoneNumber
+  - password
+properties:
+  emailOrPhoneNumber:
+    type: string
+  password:
+    type: string
