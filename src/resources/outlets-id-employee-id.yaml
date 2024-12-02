@@ -40,18 +40,15 @@ put:
     - $ref: "../params/path/outletId.yaml"
     - $ref: "../params/path/employeeId.yaml"
   requestBody:
-    description: Employee data
+    description: Credential and account data for existing employee account
+    required: true
     content:
       application/json:
         schema:
           type: object
           properties:
-            type: object
-            properties:
-              user:
-                $ref: "../schemas/User.yaml"
-              profile:
-                $ref: "../schemas/EmployeeAccount.yaml"
+            account:
+              $ref: "../schemas/EmployeeAccount.yaml"
   responses:
     "200":
       description: Successful Response

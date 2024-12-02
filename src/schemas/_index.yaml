@@ -6,6 +6,10 @@ BusinessAccount:
   $ref: "./BusinessAccount.yaml"
 PersonalAccount:
   $ref: "./PersonalAccount.yaml"
+PartnerAccount:
+  $ref: "./PartnerAccount.yaml"
+EmployeeAccount:
+  $ref: "./EmployeeAccount.yaml"
 Response:
   $ref: "./Response.yaml"
 SignIn:

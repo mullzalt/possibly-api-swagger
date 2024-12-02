@@ -1,0 +1,62 @@
+type: object
+required:
+  - partnerName
+  - companyEmail
+  - companyPhone
+  - commissionRate
+  - bankAccountNumber
+  - bankName
+properties:
+  id:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  partnerName:
+    type: string
+    example: "John Doe"
+  companyEmail:
+    type: string
+    example: "some.company@email.com"
+  companyPhone:
+    type: string
+    example: "08123456789"
+  description:
+    type: string
+  companyAddress:
+    type: string
+  commissionRate:
+    type: number
+    multipleOf: 0.01
+    example: 5.00
+  bankAccountNumber:
+    type: string
+  bankName:
+    type: string
+  imagePath:
+    type: string
+    example: http://somelink.com/path/filename.png
+  userId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  deletedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
+  createdAt:
+    type: string
+    readOnly: true
+    format: date-time
+    example: 2024-12-01T15:30:00Z
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
