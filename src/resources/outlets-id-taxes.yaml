@@ -1,0 +1,68 @@
+get:
+  summary: Get all taxes of an outlet
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "../schemas/Tax.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+post:
+  summary: Add new Tax for an outlet
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  requestBody:
+    description: Tax data
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/Tax.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/Tax.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

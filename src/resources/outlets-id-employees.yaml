@@ -1,0 +1,83 @@
+get:
+  summary: Get all employees of an outlet
+  tags:
+    - Employee
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          $ref: "../schemas/User.yaml"
+                        profile:
+                          $ref: "../schemas/EmployeeAccount.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+post:
+  summary: Add new employee for an outlet
+  tags:
+    - Employee
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  requestBody:
+    description: Credential and account information for new employee account
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user:
+              $ref: "../schemas/SignIn.yaml"
+            account:
+              $ref: "../schemas/EmployeeAccount.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: "../schemas/User.yaml"
+                      profile:
+                        $ref: "../schemas/EmployeeAccount.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

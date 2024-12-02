@@ -1,0 +1,58 @@
+get:
+  summary: Get all the outlets of current user
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "../schemas/Outlet.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+post:
+  summary: Add new Outlet
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  requestBody:
+    description: Outlet data
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/Outlet.yaml"
+  responses:
+    "201":
+      description: Outlet successfully created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/Outlet.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

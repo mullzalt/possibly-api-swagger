@@ -1,0 +1,92 @@
+get:
+  summary: Get Tax by Id
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/taxId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/Tax.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+put:
+  summary: Update existing Tax
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/taxId.yaml"
+  requestBody:
+    description: Tax data
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/Tax.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      $ref: "../schemas/Tax.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+delete:
+  summary: Delete existing Tax
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/taxId.yaml"
+  responses:
+    "200":
+      $ref: "../responses/Ok.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

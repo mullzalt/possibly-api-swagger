@@ -1,0 +1,68 @@
+get:
+  summary: Get all discounts of an outlet
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "../schemas/Discount.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+post:
+  summary: Add new Discount for an outlet
+  tags:
+    - Outlet Resource
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  requestBody:
+    description: Discount data
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/Discount.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/Discount.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

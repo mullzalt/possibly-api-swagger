@@ -1,0 +1,103 @@
+get:
+  summary: Get employee by Id
+  tags:
+    - Employee
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/employeeId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  user:
+                    $ref: "../schemas/User.yaml"
+                  profile:
+                    $ref: "../schemas/EmployeeAccount.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+put:
+  summary: Update existing employee
+  tags:
+    - Employee
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/employeeId.yaml"
+  requestBody:
+    description: Employee data
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            type: object
+            properties:
+              user:
+                $ref: "../schemas/User.yaml"
+              profile:
+                $ref: "../schemas/EmployeeAccount.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: "../schemas/User.yaml"
+                      profile:
+                        $ref: "../schemas/EmployeeAccount.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+delete:
+  summary: Delete existing employee
+  tags:
+    - Employee
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  responses:
+    "200":
+      $ref: "../responses/Ok.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

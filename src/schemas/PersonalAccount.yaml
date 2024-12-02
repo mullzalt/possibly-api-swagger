@@ -17,6 +17,9 @@ properties:
   imagePath:
     type: string
     nullable: true
+  dateOfBirth:
+    type: string
+    format: date-time
   bankAccountNumber:
     type: string
     nullable: true

@@ -1,0 +1,35 @@
+get:
+  summary: Revalidate access and refresh token
+  tags:
+    - Authentication
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Successfull sign in
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/BearerTokens.yaml"
+    "403":
+      description: Invalid or expired refresh Token
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  message:
+                    default: "Invalid token"
+                  code:
+                    default: 403
+                  success:
+                    default: false
+    default:
+      $ref: "../responses/Unexpected.yaml"

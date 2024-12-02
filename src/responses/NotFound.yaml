@@ -1,6 +1,14 @@
-description: successful response
+description: Resource Not found
 content:
   application/json:
     schema:
       allOf:
         - $ref: "../schemas/Response.yaml"
+        - type: object
+          properties:
+            message:
+              default: "Not found"
+            code:
+              default: 404
+            success:
+              default: false

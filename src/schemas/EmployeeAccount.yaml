@@ -1,35 +1,41 @@
 type: object
 required:
-  - email
-  - password
+  - fullName
+  - dateOfBirth
 properties:
   id:
     type: integer
     format: int64
     readOnly: true
     example: 1
-  email:
+  fullName:
     type: string
-    example: "some@email.com"
-  password:
+    example: "John Doe"
+  address:
     type: string
-    writeOnly: true
-    descrpition: Hashed password
-  accountType:
-    type: string
-    readOnly: true
-    enum: [personal, employee, business, partner, admin]
-    default: personal
-  referralCode:
-    type: string
-    readOnly: true
     nullable: true
-    default: null
-  referredBy:
+  imagePath:
     type: string
-    readOnly: true
     nullable: true
-    default: null
+  dateOfBirth:
+    type: string
+    format: date-time
+  bankAccountNumber:
+    type: string
+    nullable: true
+  bankName:
+    type: string
+    nullable: true
+  userId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  outletId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
   deletedAt:
     type: string
     format: date-time

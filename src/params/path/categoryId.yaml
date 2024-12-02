@@ -1,0 +1,6 @@
+name: categoryId
+in: path
+required: true
+description: The id of the category to retrieve
+schema:
+  type: string

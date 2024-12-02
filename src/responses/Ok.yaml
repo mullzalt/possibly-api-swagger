@@ -4,3 +4,11 @@ content:
     schema:
       allOf:
         - $ref: "../schemas/Response.yaml"
+        - type: object
+          properties:
+            message:
+              default: "OK"
+            code:
+              default: 200
+            success:
+              default: true

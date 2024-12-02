@@ -1,0 +1,157 @@
+get:
+  summary: Get Order by Id
+  tags:
+    - Transaction
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/orderId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "../schemas/Order.yaml"
+                      - type: object
+                        properties:
+                          orderItems:
+                            type: array
+                            items:
+                              $ref: "../schemas/OrderItem.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+put:
+  summary: Update existing Order
+  tags:
+    - Transaction
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/orderId.yaml"
+  requestBody:
+    description: Order and order items data
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "../schemas/Order.yaml"
+            - type: object
+              properties:
+                orderItems:
+                  type: array
+                  items:
+                    $ref: "../schemas/OrderItem.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      allOf:
+                        - $ref: "../schemas/Response.yaml"
+                        - type: object
+                          properties:
+                            data:
+                              allOf:
+                                - $ref: "../schemas/Order.yaml"
+                                - type: object
+                                  properties:
+                                    orderItems:
+                                      type: array
+                                      items:
+                                        $ref: "../schemas/OrderItem.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+delete:
+  summary: Delete existing Order
+  tags:
+    - Transaction
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/orderId.yaml"
+  responses:
+    "200":
+      $ref: "../responses/Ok.yaml"
+    "400":
+      $ref: "../responses/BadRequest.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+post:
+  summary: Checkout order transaction
+  tags:
+    - Transaction
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+    - $ref: "../params/path/orderId.yaml"
+  requestBody:
+    description: Transaction Data
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/Transaction.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/Transaction.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

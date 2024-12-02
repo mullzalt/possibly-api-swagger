@@ -2,3 +2,13 @@ outletId:
   $ref: "./path/outletId.yaml"
 orderId:
   $ref: "./path/orderId.yaml"
+employeeId:
+  $ref: "./path/employeeId.yaml"
+categoryId:
+  $ref: "./path/categoryId.yaml"
+productId:
+  $ref: "./path/productId.yaml"
+taxId:
+  $ref: "./path/taxId.yaml"
+discountId:
+  $ref: "./path/discountId.yaml"

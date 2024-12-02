@@ -5,16 +5,14 @@ info:
 tags:
   - name: Authentication
     description: Authentication actions
-  - name: Payment
-    description: Payment methods and type
-  - name: Transaction
-    description: Transaction actions
-  - name: Profile
-    description: Manage personal information
-  - name: Company Resource
+  - name: Outlet Resource
     description: Manage company or shop resources information
+  - name: Employee
+    description: Manage employee users
   - name: User
     description: Manage users
+  - name: Transaction
+    description: Manage transactions of an outlet
 paths:
   /admin/users:
     post:
@@ -204,16 +202,27 @@ paths:
                         default: false
         default:
           $ref: '#/components/responses/Unexpected'
-  /password/reset:
-    post:
-      summary: Sign out from existing session
+  /auth/refresh:
+    get:
+      summary: Revalidate access and refresh token
       tags:
         - Authentication
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Successfull sign out
+          description: Successfull sign in
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BearerTokens'
+        '403':
+          description: Invalid or expired refresh Token
           content:
             application/json:
               schema:
@@ -222,34 +231,23 @@ paths:
                   - type: object
                     properties:
                       message:
-                        default: Sign out successfull
-        '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
+                        default: Invalid token
                       code:
-                        default: 401
+                        default: 403
                       success:
                         default: false
         default:
           $ref: '#/components/responses/Unexpected'
-  /password/reset/{token}:
-    post:
-      summary: Sign out from existing session
+  /auth/info:
+    get:
+      summary: Get current session user information
       tags:
         - Authentication
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Successfull sign out
+          description: Successfull response
           content:
             application/json:
               schema:
@@ -257,35 +255,23 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        $ref: '#/components/schemas/User'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          description: Invalid or expired access Token
+          $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/Unexpected'
-  /employees:
-    post:
-      summary: Sign out from existing session
+  /outlets:
+    get:
+      summary: Get all the outlets of current user
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -293,35 +279,30 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Outlet'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/Unexpected'
-  /categories:
     post:
-      summary: Sign out from existing session
+      summary: Add new Outlet
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
+      requestBody:
+        description: Outlet data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Outlet'
       responses:
-        '200':
-          description: Successfull sign out
+        '201':
+          description: Outlet successfully created
           content:
             application/json:
               schema:
@@ -329,35 +310,28 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        $ref: '#/components/schemas/Outlet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         default:
           $ref: '#/components/responses/Unexpected'
-  /categories/{categoryId}:
-    post:
-      summary: Sign out from existing session
+  /outlets/{outletId}:
+    get:
+      summary: Get outlet by Id
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -365,35 +339,33 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        $ref: '#/components/schemas/Outlet'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /taxes:
-    post:
-      summary: Sign out from existing session
+    put:
+      summary: Update existing outlet
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Outlet data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Outlet'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -401,71 +373,51 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        $ref: '#/components/schemas/Outlet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /discounts:
-    post:
-      summary: Sign out from existing session
+    delete:
+      summary: Delete existing outlet
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
       responses:
         '200':
-          description: Successfull sign out
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: Sign out successfull
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /orders:
-    post:
-      summary: Sign out from existing session
+  /outlets/{outletId}/employees:
+    get:
+      summary: Get all employees of an outlet
       tags:
-        - Authentication
+        - Employee
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -473,35 +425,47 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            user:
+                              $ref: '#/components/schemas/User'
+                            profile:
+                              $ref: '#/components/schemas/EmployeeAccount'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /orders/{orderId}:
     post:
-      summary: Sign out from existing session
+      summary: Add new employee for an outlet
       tags:
-        - Authentication
+        - Employee
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Credential and account information for new employee account
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/SignIn'
+                account:
+                  $ref: '#/components/schemas/EmployeeAccount'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -509,35 +473,35 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        type: object
+                        properties:
+                          user:
+                            $ref: '#/components/schemas/User'
+                          profile:
+                            $ref: '#/components/schemas/EmployeeAccount'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /payments:
-    post:
-      summary: Sign out from existing session
+  /outlets/{outletId}/employees/{employeeId}:
+    get:
+      summary: Get employee by Id
       tags:
-        - Authentication
+        - Employee
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/employeeId'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -545,35 +509,43 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      user:
+                        $ref: '#/components/schemas/User'
+                      profile:
+                        $ref: '#/components/schemas/EmployeeAccount'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /payment-keys:
-    post:
-      summary: Sign out from existing session
+    put:
+      summary: Update existing employee
       tags:
-        - Authentication
+        - Employee
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/employeeId'
+      requestBody:
+        description: Employee data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type: object
+                properties:
+                  user:
+                    $ref: ../schemas/User.yaml
+                  profile:
+                    $ref: ../schemas/EmployeeAccount.yaml
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -581,71 +553,56 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        type: object
+                        properties:
+                          user:
+                            $ref: '#/components/schemas/User'
+                          profile:
+                            $ref: '#/components/schemas/EmployeeAccount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /features:
-    post:
-      summary: Sign out from existing session
+    delete:
+      summary: Delete existing employee
       tags:
-        - Authentication
+        - Employee
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
       responses:
         '200':
-          description: Successfull sign out
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: Sign out successfull
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /features/{featureId}:
-    post:
-      summary: Sign out from existing session
+  /outlets/{outletId}/categories:
+    get:
+      summary: Get all categories of an outlet
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -653,35 +610,37 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Category'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /subcriptions:
     post:
-      summary: Sign out from existing session
+      summary: Add new Category for an outlet
       tags:
-        - Authentication
+        - Outlet Resource
       security:
         - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Category data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
       responses:
         '200':
-          description: Successfull sign out
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -689,35 +648,1111 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        $ref: '#/components/schemas/Category'
         '401':
-          description: No current session
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
         default:
           $ref: '#/components/responses/Unexpected'
-  /subcriptions/{subcriptionId}:
+  /outlets/{outletId}/categories/{categoryId}:
+    get:
+      summary: Get Category by Id
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/categoryId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Category'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    put:
+      summary: Update existing Category
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/categoryId'
+      requestBody:
+        description: Category data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          type: object
+                          required:
+                            - name
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            name:
+                              type: string
+                              example: Food
+                            parentCategoryId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                              nullable: true
+                            outletId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            deletedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+                            createdAt:
+                              type: string
+                              readOnly: true
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            updatedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    delete:
+      summary: Delete existing Category
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/categoryId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
     post:
-      summary: Sign out from existing session
+      summary: Add children to an existing Category
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/categoryId'
+      requestBody:
+        description: Category data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          type: object
+                          required:
+                            - name
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            name:
+                              type: string
+                              example: Food
+                            parentCategoryId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                              nullable: true
+                            outletId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            deletedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+                            createdAt:
+                              type: string
+                              readOnly: true
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            updatedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/products:
+    get:
+      summary: Get all products of an outlet
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    post:
+      summary: Add new product for an outlet
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Product Data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/products/{productId}:
+    get:
+      summary: Get product by Id
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/productId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    put:
+      summary: Update existing product
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        description: product data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          type: object
+                          required:
+                            - name
+                            - price
+                            - isAvailable
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            name:
+                              type: string
+                              example: Some Food
+                            price:
+                              type: number
+                              multipleOf: 0.01
+                              example: 10.25
+                            isAvailable:
+                              type: boolean
+                              default: true
+                            categoryId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            image:
+                              type: string
+                              example: http://somelink.com/path/filename.png
+                            outletId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            deletedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+                            createdAt:
+                              type: string
+                              readOnly: true
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            updatedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    delete:
+      summary: Delete existing product
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/productId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/taxes:
+    get:
+      summary: Get all taxes of an outlet
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Tax'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    post:
+      summary: Add new Tax for an outlet
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Tax data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tax'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Tax'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/taxes/{taxId}:
+    get:
+      summary: Get Tax by Id
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/taxId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Tax'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    put:
+      summary: Update existing Tax
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/taxId'
+      requestBody:
+        description: Tax data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tax'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          type: object
+                          required:
+                            - name
+                            - rate
+                            - isUse
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            name:
+                              type: string
+                              example: Some Food
+                            rate:
+                              type: number
+                              multipleOf: 0.01
+                              example: 10.25
+                            isUse:
+                              type: boolean
+                              default: true
+                            outletId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            deletedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+                            createdAt:
+                              type: string
+                              readOnly: true
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            updatedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    delete:
+      summary: Delete existing Tax
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/taxId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/discounts:
+    get:
+      summary: Get all discounts of an outlet
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Discount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    post:
+      summary: Add new Discount for an outlet
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Discount data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Discount'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Discount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/discounts/{discountId}:
+    get:
+      summary: Get Discount by Id
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/discountId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Discount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    put:
+      summary: Update existing Discount
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/discountId'
+      requestBody:
+        description: Discount data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Discount'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          type: object
+                          required:
+                            - name
+                            - code
+                            - type
+                            - startedAt
+                            - expiredAt
+                          properties:
+                            id:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            name:
+                              type: string
+                              example: Some Food
+                            rate:
+                              type: number
+                              multipleOf: 0.01
+                              example: 10.25
+                            amount:
+                              type: number
+                              multipleOf: 0.01
+                              example: 10.25
+                            startedAt:
+                              type: string
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            expiredAt:
+                              type: string
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            outletId:
+                              type: integer
+                              format: int64
+                              readOnly: true
+                              example: 1
+                            deletedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+                            createdAt:
+                              type: string
+                              readOnly: true
+                              format: date-time
+                              example: '2024-12-01T15:30:00Z'
+                            updatedAt:
+                              type: string
+                              format: date-time
+                              readOnly: true
+                              nullable: true
+                              default: null
+                              example: '2024-12-01T15:30:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    delete:
+      summary: Delete existing Discount
+      tags:
+        - Outlet Resource
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/discountId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/orders:
+    get:
+      summary: Get all orders of an outlet
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: '#/components/schemas/Order'
+                            - type: object
+                              properties:
+                                orderItems:
+                                  type: array
+                                  items:
+                                    $ref: '#/components/schemas/OrderItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    post:
+      summary: Add new Order for an outlet
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+      requestBody:
+        description: Order and order items data
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Order'
+                - type: object
+                  properties:
+                    orderItems:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/OrderItem'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Order'
+                          - type: object
+                            properties:
+                              orderItems:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/OrderItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/orders/{orderId}:
+    get:
+      summary: Get Order by Id
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Order'
+                          - type: object
+                            properties:
+                              orderItems:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/OrderItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    put:
+      summary: Update existing Order
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/orderId'
+      requestBody:
+        description: Order and order items data
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Order'
+                - type: object
+                  properties:
+                    orderItems:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/OrderItem'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          allOf:
+                            - $ref: ../schemas/Response.yaml
+                            - type: object
+                              properties:
+                                data:
+                                  allOf:
+                                    - $ref: ../schemas/Order.yaml
+                                    - type: object
+                                      properties:
+                                        orderItems:
+                                          type: array
+                                          items:
+                                            $ref: ../schemas/OrderItem.yaml
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    delete:
+      summary: Delete existing Order
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+    post:
+      summary: Checkout order transaction
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/outletId'
+        - $ref: '#/components/parameters/orderId'
+      requestBody:
+        description: Transaction Data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Outlet not found
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/stocks:
+    get:
+      summary: Get current session user information
       tags:
         - Authentication
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Successfull sign out
+          description: Successfull response
           content:
             application/json:
               schema:
@@ -725,10 +1760,23 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: Sign out successfull
+                      data:
+                        $ref: '#/components/schemas/User'
         '401':
-          description: No current session
+          description: Invalid or expired access Token
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/Unexpected'
+  /outlets/{outletId}/stocks/{stockId}:
+    get:
+      summary: Get current session user information
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfull response
           content:
             application/json:
               schema:
@@ -736,15 +1784,64 @@ paths:
                   - $ref: '#/components/schemas/Response'
                   - type: object
                     properties:
-                      message:
-                        default: You are not signed in
-                      code:
-                        default: 401
-                      success:
-                        default: false
+                      data:
+                        $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid or expired access Token
+          $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/Unexpected'
 components:
+  parameters:
+    outletId:
+      name: outletId
+      in: path
+      required: true
+      description: The id of the outlet to retrieve
+      schema:
+        type: string
+    employeeId:
+      name: employeeId
+      in: path
+      required: true
+      description: The id of the employee to retrieve
+      schema:
+        type: string
+    categoryId:
+      name: categoryId
+      in: path
+      required: true
+      description: The id of the category to retrieve
+      schema:
+        type: string
+    productId:
+      name: productId
+      in: path
+      required: true
+      description: The id of the product to retrieve
+      schema:
+        type: string
+    taxId:
+      name: taxId
+      in: path
+      required: true
+      description: The id of the tax to retrieve
+      schema:
+        type: string
+    discountId:
+      name: discountId
+      in: path
+      required: true
+      description: The id of the discount to retrieve
+      schema:
+        type: string
+    orderId:
+      name: orderId
+      in: path
+      required: true
+      description: The id of the order to retrieve
+      schema:
+        type: string
   schemas:
     SignIn:
       type: object
@@ -836,6 +1933,9 @@ components:
         imagePath:
           type: string
           nullable: true
+        dateOfBirth:
+          type: string
+          format: date-time
         bankAccountNumber:
           type: string
           nullable: true
@@ -947,8 +2047,10 @@ components:
         - password
       properties:
         id:
-          type: string
+          type: integer
+          format: int64
           readOnly: true
+          example: 1
         email:
           type: string
           example: some@email.com
@@ -976,6 +2078,601 @@ components:
           readOnly: true
           nullable: true
           default: null
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Outlet:
+      type: object
+      required:
+        - outletName
+        - outletAddress
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        outletName:
+          type: string
+          example: Some name
+        outletAddress:
+          type: string
+          example: Some st 12, City, Province, Country.
+        image:
+          type: string
+          example: http://somelink.com/path/filename.png
+        userId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    EmployeeAccount:
+      type: object
+      required:
+        - fullName
+        - dateOfBirth
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        fullName:
+          type: string
+          example: John Doe
+        address:
+          type: string
+          nullable: true
+        imagePath:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date-time
+        bankAccountNumber:
+          type: string
+          nullable: true
+        bankName:
+          type: string
+          nullable: true
+        userId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Category:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Food
+        parentCategoryId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+          nullable: true
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Product:
+      type: object
+      required:
+        - name
+        - price
+        - isAvailable
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Some Food
+        price:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+        isAvailable:
+          type: boolean
+          default: true
+        categoryId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        image:
+          type: string
+          example: http://somelink.com/path/filename.png
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Tax:
+      type: object
+      required:
+        - name
+        - rate
+        - isUse
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Some Food
+        rate:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+        isUse:
+          type: boolean
+          default: true
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Discount:
+      type: object
+      required:
+        - name
+        - code
+        - type
+        - startedAt
+        - expiredAt
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Some Food
+        rate:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+        amount:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+        startedAt:
+          type: string
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        expiredAt:
+          type: string
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Order:
+      type: object
+      required:
+        - orderNumber
+        - customerName
+        - orderSource
+        - orderStatus
+        - orderType
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        orderNumber:
+          type: string
+          example: ORDERNUMBER123
+        orderSource:
+          type: string
+          enum:
+            - confirmed
+            - preparing
+            - delivered
+            - cancelled
+        orderStatus:
+          type: string
+          enum:
+            - cashier
+            - qr_table
+        orderType:
+          type: string
+          enum:
+            - dine_in
+            - takeaway
+            - other
+        customerName:
+          type: string
+          example: John Doe
+        customerPhoneNumber:
+          type: string
+          example: 82123456789
+          nullable: true
+          default: null
+        customerEmail:
+          type: string
+          example: example@email.com
+          nullable: true
+          default: null
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    OrderItem:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        orderId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        productId:
+          type: integer
+          format: int64
+          example: 1
+        price:
+          type: number
+          multipleOf: 0.01
+          readOnly: true
+        quantity:
+          type: integer
+          format: int64
+          example: 1
+        subTotal:
+          type: number
+          multipleOf: 0.01
+          readOnly: true
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Transaction:
+      type: object
+      required:
+        - taxId
+        - paymentStatus
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        taxId:
+          type: integer
+          format: int64
+          example: 1
+        taxRate:
+          type: number
+          multipleOf: 0.01
+          readOnly: true
+        discountId:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+          default: null
+        discountRate:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+          nullable: true
+          default: null
+        discountAmount:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+          nullable: true
+          default: null
+        paymentStatus:
+          type: string
+          enum:
+            - paid
+            - unpaid
+            - failed
+            - refunded
+        paymentTypeId:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+          default: null
+        orderId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    PaymentType:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Some Method
+        image:
+          type: string
+          example: http://somelink.com/path/filename.png
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+    Stock:
+      type: object
+      required:
+        - name
+        - unit
+        - ammount
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: Some Goods
+        unit:
+          type: string
+          example: Kg
+        ammount:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+        price:
+          type: number
+          multipleOf: 0.01
+          example: 10.25
+          nullable: true
+        outletId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
         deletedAt:
           type: string
           format: date-time
@@ -1061,12 +2758,20 @@ components:
                     item:
                       type: any
     NotFound:
-      description: successful response
+      description: Resource Not found
       content:
         application/json:
           schema:
             allOf:
               - $ref: '#/components/schemas/Response'
+              - type: object
+                properties:
+                  message:
+                    default: Not found
+                  code:
+                    default: 404
+                  success:
+                    default: false
     Ok:
       description: successful response
       content:
@@ -1074,6 +2779,14 @@ components:
           schema:
             allOf:
               - $ref: '#/components/schemas/Response'
+              - type: object
+                properties:
+                  message:
+                    default: OK
+                  code:
+                    default: 200
+                  success:
+                    default: true
   securitySchemes:
     bearerAuth:
       type: http

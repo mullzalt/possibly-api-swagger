@@ -1,0 +1,6 @@
+name: taxId
+in: path
+required: true
+description: The id of the tax to retrieve
+schema:
+  type: string

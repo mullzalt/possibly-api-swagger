@@ -7,16 +7,14 @@ info:
 tags:
   - name: Authentication
     description: Authentication actions
-  - name: Payment
-    description: Payment methods and type
-  - name: Transaction
-    description: Transaction actions
-  - name: Profile
-    description: Manage personal information
-  - name: Company Resource
+  - name: Outlet Resource
     description: Manage company or shop resources information
+  - name: Employee
+    description: Manage employee users
   - name: User
     description: Manage users
+  - name: Transaction
+    description: Manage transactions of an outlet
 
 paths:
   /admin/users:
@@ -29,38 +27,54 @@ paths:
     $ref: "./resources/auth-sign-in.yaml"
   /auth/sign-out:
     $ref: "./resources/auth-sign-out.yaml"
-  /password/reset:
-    $ref: "./resources/auth-sign-out.yaml"
-  /password/reset/{token}:
-    $ref: "./resources/auth-sign-out.yaml"
-  /employees:
-    $ref: "./resources/auth-sign-out.yaml"
-  /categories:
-    $ref: "./resources/auth-sign-out.yaml"
-  /categories/{categoryId}:
-    $ref: "./resources/auth-sign-out.yaml"
-  /taxes:
-    $ref: "./resources/auth-sign-out.yaml"
-  /discounts:
-    $ref: "./resources/auth-sign-out.yaml"
-  /orders:
-    $ref: "./resources/auth-sign-out.yaml"
-  /orders/{orderId}:
-    $ref: "./resources/auth-sign-out.yaml"
-  /payments:
-    $ref: "./resources/auth-sign-out.yaml"
-  /payment-keys:
-    $ref: "./resources/auth-sign-out.yaml"
-  /features:
-    $ref: "./resources/auth-sign-out.yaml"
-  /features/{featureId}:
-    $ref: "./resources/auth-sign-out.yaml"
-  /subcriptions:
-    $ref: "./resources/auth-sign-out.yaml"
-  /subcriptions/{subcriptionId}:
-    $ref: "./resources/auth-sign-out.yaml"
+  /auth/refresh:
+    $ref: "./resources/auth-refresh.yaml"
+  /auth/info:
+    $ref: "./resources/auth-info.yaml"
+
+  /outlets:
+    $ref: "./resources/outlets.yaml"
+  /outlets/{outletId}:
+    $ref: "./resources/outlets-id.yaml"
+
+  /outlets/{outletId}/employees:
+    $ref: "./resources/outlets-id-employees.yaml"
+  /outlets/{outletId}/employees/{employeeId}:
+    $ref: "./resources/outlets-id-employee-id.yaml"
+
+  /outlets/{outletId}/categories:
+    $ref: "./resources/outlets-id-categories.yaml"
+  /outlets/{outletId}/categories/{categoryId}:
+    $ref: "./resources/outlets-id-categories-id.yaml"
+
+  /outlets/{outletId}/products:
+    $ref: "./resources/outlets-id-products.yaml"
+  /outlets/{outletId}/products/{productId}:
+    $ref: "./resources/outlets-id-products-id.yaml"
+
+  /outlets/{outletId}/taxes:
+    $ref: "./resources/outlets-id-taxes.yaml"
+  /outlets/{outletId}/taxes/{taxId}:
+    $ref: "./resources/outlets-id-taxes-id.yaml"
+
+  /outlets/{outletId}/discounts:
+    $ref: "./resources/outlets-id-discounts.yaml"
+  /outlets/{outletId}/discounts/{discountId}:
+    $ref: "./resources/outlets-id-discounts-id.yaml"
+
+  /outlets/{outletId}/orders:
+    $ref: "./resources/outlets-id-orders.yaml"
+  /outlets/{outletId}/orders/{orderId}:
+    $ref: "./resources/outlets-id-orders-id.yaml"
+
+  /outlets/{outletId}/stocks:
+    $ref: "./resources/auth-info.yaml"
+  /outlets/{outletId}/stocks/{stockId}:
+    $ref: "./resources/auth-info.yaml"
 
 components:
+  parameters:
+    $ref: "./params/_index.yaml"
   schemas:
     $ref: "./schemas/_index.yaml"
   responses:

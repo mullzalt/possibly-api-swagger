@@ -1,0 +1,90 @@
+get:
+  summary: Get all orders of an outlet
+  tags:
+    - Transaction
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "../schemas/Order.yaml"
+                        - type: object
+                          properties:
+                            orderItems:
+                              type: array
+                              items:
+                                $ref: "../schemas/OrderItem.yaml"
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
+
+post:
+  summary: Add new Order for an outlet
+  tags:
+    - Transaction
+  security:
+    - bearerAuth: []
+  parameters:
+    - $ref: "../params/path/outletId.yaml"
+  requestBody:
+    description: Order and order items data
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "../schemas/Order.yaml"
+            - type: object
+              properties:
+                orderItems:
+                  type: array
+                  items:
+                    $ref: "../schemas/OrderItem.yaml"
+  responses:
+    "200":
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "../schemas/Order.yaml"
+                      - type: object
+                        properties:
+                          orderItems:
+                            type: array
+                            items:
+                              $ref: "../schemas/OrderItem.yaml"
+
+    "401":
+      $ref: "../responses/Unauthorized.yaml"
+    "403":
+      $ref: "../responses/Forbidden.yaml"
+    "404":
+      description: Outlet not found
+      $ref: "../responses/NotFound.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"

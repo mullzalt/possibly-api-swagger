@@ -26,7 +26,7 @@ The minified document is stored in `_build/openapi.yaml`.
 
 ### Test
 
-The command checks if the document follows the OpenAPI 3.0 Specification.
+The command checks if the document follows the OpenAPI 3.1.0 Specification.
 
 ```
 npm run test

@@ -1,0 +1,23 @@
+get:
+  summary: Get current session user information
+  tags:
+    - Authentication
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: Successfull response
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../schemas/Response.yaml"
+              - type: object
+                properties:
+                  data:
+                    $ref: "../schemas/User.yaml"
+    "401":
+      description: Invalid or expired access Token
+      $ref: "../responses/Unauthorized.yaml"
+    default:
+      $ref: "../responses/Unexpected.yaml"
