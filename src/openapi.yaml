@@ -24,7 +24,7 @@ paths:
   /auth/sign-up/personal:
     $ref: "./resources/auth-sign-up-personal.yaml"
   /auth/sign-up/business:
-    $ref: "./resources/auth-sign-in.yaml"
+    $ref: "./resources/auth-sign-up-business.yaml"
   /auth/sign-in:
     $ref: "./resources/auth-sign-in.yaml"
   /auth/sign-out:

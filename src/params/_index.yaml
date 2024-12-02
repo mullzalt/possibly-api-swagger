@@ -1,0 +1,4 @@
+outletId:
+  $ref: "./path/outletId.yaml"
+orderId:
+  $ref: "./path/orderId.yaml"

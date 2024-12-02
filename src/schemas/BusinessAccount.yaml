@@ -1,0 +1,64 @@
+type: object
+required:
+  - companyName
+  - registrationNumber
+  - companyEmail
+  - companyPhone
+  - ownerName
+  - bankAccountNumber
+  - bankName
+properties:
+  id:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  companyName:
+    type: string
+    example: "Company name co"
+  companyEmail:
+    type: string
+    example: "some.company@email.com"
+  companyPhone:
+    type: string
+    example: "08123456789"
+  ownerName:
+    type: string
+    example: "John Doe"
+  registrationNumber:
+    type: string
+    example: "01234567891011"
+  companyAddress:
+    type: string
+    nullable: true
+  image:
+    type: string
+    nullable: true
+  bankAccountNumber:
+    type: string
+  bankName:
+    type: string
+  userId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  deletedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
+  createdAt:
+    type: string
+    readOnly: true
+    format: date-time
+    example: 2024-12-01T15:30:00Z
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z

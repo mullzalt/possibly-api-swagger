@@ -1,0 +1,74 @@
+type: object
+required:
+  - taxId
+  - paymentStatus
+properties:
+  id:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  taxId:
+    type: integer
+    format: int64
+    example: 1
+  taxRate:
+    type: number
+    multipleOf: 0.01
+    readOnly: true
+  discountId:
+    type: integer
+    format: int64
+    example: 1
+    nullable: true
+    default: null
+  discountRate:
+    type: number
+    multipleOf: 0.01
+    example: 10.25
+    nullable: true
+    default: null
+  discountAmount:
+    type: number
+    multipleOf: 0.01
+    example: 10.25
+    nullable: true
+    default: null
+  paymentStatus:
+    type: string
+    enum: [paid, unpaid, failed, refunded]
+  paymentTypeId:
+    type: integer
+    format: int64
+    example: 1
+    nullable: true
+    default: null
+  orderId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  outletId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  deletedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
+  createdAt:
+    type: string
+    readOnly: true
+    format: date-time
+    example: 2024-12-01T15:30:00Z
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z

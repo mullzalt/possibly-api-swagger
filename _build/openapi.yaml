@@ -92,19 +92,24 @@ paths:
           $ref: '#/components/responses/Unexpected'
   /auth/sign-up/business:
     post:
-      summary: Sign in authentication action
+      summary: Sign up for business account user then sign in
       tags:
         - Authentication
       requestBody:
-        description: Credential used for sign in
+        description: Credential and account information for new business account
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignIn'
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/SignIn'
+                account:
+                  $ref: '#/components/schemas/BusinessAccount'
       responses:
         '200':
-          description: Successfull sign in
+          description: Account successfully created
           content:
             application/json:
               schema:
@@ -113,24 +118,11 @@ paths:
                   - type: object
                     properties:
                       message:
-                        default: Sign in successfull
+                        default: Account created
                       data:
                         $ref: '#/components/schemas/BearerTokens'
-        '403':
-          description: Invalid sign in credential
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/Response'
-                  - type: object
-                    properties:
-                      message:
-                        default: Invalid email or password
-                      code:
-                        default: 403
-                      success:
-                        default: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
         default:
           $ref: '#/components/responses/Unexpected'
   /auth/sign-in:
@@ -883,6 +875,71 @@ components:
         refreshToken:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    BusinessAccount:
+      type: object
+      required:
+        - companyName
+        - registrationNumber
+        - companyEmail
+        - companyPhone
+        - ownerName
+        - bankAccountNumber
+        - bankName
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        companyName:
+          type: string
+          example: Company name co
+        companyEmail:
+          type: string
+          example: some.company@email.com
+        companyPhone:
+          type: string
+          example: '08123456789'
+        ownerName:
+          type: string
+          example: John Doe
+        registrationNumber:
+          type: string
+          example: '01234567891011'
+        companyAddress:
+          type: string
+          nullable: true
+        image:
+          type: string
+          nullable: true
+        bankAccountNumber:
+          type: string
+        bankName:
+          type: string
+        userId:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        deletedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
+        createdAt:
+          type: string
+          readOnly: true
+          format: date-time
+          example: '2024-12-01T15:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          default: null
+          example: '2024-12-01T15:30:00Z'
     User:
       type: object
       required:

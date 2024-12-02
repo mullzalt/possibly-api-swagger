@@ -1,0 +1,6 @@
+name: outletId
+in: path
+required: true
+description: The id of the outlet to retrieve
+schema:
+  type: string

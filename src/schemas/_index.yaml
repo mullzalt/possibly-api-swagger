@@ -2,6 +2,8 @@ AdminAccount:
   $ref: "./AdminAccount.yaml"
 BearerTokens:
   $ref: "./BearerTokens.yaml"
+BusinessAccount:
+  $ref: "./BusinessAccount.yaml"
 PersonalAccount:
   $ref: "./PersonalAccount.yaml"
 Response:
@@ -10,3 +12,23 @@ SignIn:
   $ref: "./SignIn.yaml"
 User:
   $ref: "./User.yaml"
+Outlet:
+  $ref: "./Outlet.yaml"
+Category:
+  $ref: "./Category.yaml"
+Product:
+  $ref: "./Product.yaml"
+Tax:
+  $ref: "./Tax.yaml"
+Discount:
+  $ref: "./Discount.yaml"
+Order:
+  $ref: "./Order.yaml"
+OrderItem:
+  $ref: "./OrderItem.yaml"
+Transaction:
+  $ref: "./Transaction.yaml"
+PaymentType:
+  $ref: "./PaymentType.yaml"
+Stock:
+  $ref: "./Stock.yaml"

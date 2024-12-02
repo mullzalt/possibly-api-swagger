@@ -1,0 +1,62 @@
+type: object
+required:
+  - orderNumber
+  - customerName
+  - orderSource
+  - orderStatus
+  - orderType
+properties:
+  id:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  orderNumber:
+    type: string
+    example: ORDERNUMBER123
+  orderSource:
+    type: string
+    enum: [confirmed, preparing, delivered, cancelled]
+  orderStatus:
+    type: string
+    enum: [cashier, qr_table]
+  orderType:
+    type: string
+    enum: [dine_in, takeaway, other]
+  customerName:
+    type: string
+    example: John Doe
+  customerPhoneNumber:
+    type: string
+    example: 082123456789
+    nullable: true
+    default: null
+  customerEmail:
+    type: string
+    example: example@email.com
+    nullable: true
+    default: null
+  outletId:
+    type: integer
+    format: int64
+    readOnly: true
+    example: 1
+  deletedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
+  createdAt:
+    type: string
+    readOnly: true
+    format: date-time
+    example: 2024-12-01T15:30:00Z
+  updatedAt:
+    type: string
+    format: date-time
+    readOnly: true
+    nullable: true
+    default: null
+    example: 2024-12-01T15:30:00Z
